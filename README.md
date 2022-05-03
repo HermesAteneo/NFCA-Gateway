@@ -108,11 +108,23 @@ https://nfca.cc/documentation#gateway_list
 
 <br><br>
 
-<hr style="border:1px solid gray">
-<a href="https://nfca.cc" target="_blank"><img src="https://img.shields.io/badge/NFCA-999?style=for-the-badge&logo=&logoColor=white&color=000000" ></a> &nbsp; 
-<a href="https://nfca.cc/documentation" target="_blank"><img src="https://img.shields.io/badge/DOCS-999?style=for-the-badge&logo=&logoColor=white&color=5e2ca5" ></a> &nbsp;
+
+
+<a href="https://nfca.cc" target="_blank"><img src="https://img.shields.io/badge/HOME-NFCA-999?style=for-the-badge&logo=&logoColor=white&color=222222" ></a> &nbsp; 
+<a href="https://nfca.cc/documentation" target="_blank"><img src="https://img.shields.io/badge/FULL-DOCUMENTATION-999?style=for-the-badge&logo=&logoColor=white&color=a463f2" ></a> &nbsp;
 <a href="https://nfca.cc" target="_blank"><img src="https://img.shields.io/badge/GET-ALIAS-999?style=for-the-badge&logo=&logoColor=white&color=ffb700" ></a> &nbsp; 
+<a href="https://nfca.cc/documentation#gateway_list" target="_blank"><img src="https://img.shields.io/badge/NFCA-GATEWAYS-999?style=for-the-badge&logo=&logoColor=white&color=FF00FF" ></a> &nbsp; 
+
+<br><br>
+
+## Version note
+
+<a href="https://github.com/HermesAteneo/Protected-Public-Source-License-PPSL">&lt;PPS/&gt;</a> Protected Public Source License<br />
+Protected by the 4.0 "CC" or Creative Commons license (CC BY-NC-ND 4.0)<br />
+Created for freedom by Hermes Ateneo (hermesateneo#gmail.com)<br /><br />
 
 
+## Legal and Licensing
 
+<a href="https://github.com/HermesAteneo/Protected-Public-Source-License-PPSL">&lt;PPS/&gt;</a> All the codes of NFCA project (as well the original designs) are public but protected by the  4.0 "CC" or Creative Commons license (CC BY-NC-ND 4.0) and the &lt;PPS/&gt; Protected Public Source License. <br /><br />
 
