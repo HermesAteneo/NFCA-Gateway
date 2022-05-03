@@ -111,9 +111,9 @@ https://nfca.cc/documentation#gateway_list
 
 
 <a href="https://nfca.cc" target="_blank"><img src="https://img.shields.io/badge/HOME-NFCA-999?style=for-the-badge&logo=&logoColor=white&color=222222" ></a> &nbsp; 
-<a href="https://nfca.cc/documentation" target="_blank"><img src="https://img.shields.io/badge/FULL-DOCUMENTATION-999?style=for-the-badge&logo=&logoColor=white&color=FF00FF" ></a> &nbsp;
+<a href="https://nfca.cc/documentation" target="_blank"><img src="https://img.shields.io/badge/FULL-DOCUMENTATION-999?style=for-the-badge&logo=&logoColor=white&color=a463f2" ></a> &nbsp;
 <a href="https://nfca.cc" target="_blank"><img src="https://img.shields.io/badge/GET-ALIAS-999?style=for-the-badge&logo=&logoColor=white&color=ffb700" ></a> &nbsp; 
-<a href="https://nfca.cc/documentation#gateway_list" target="_blank"><img src="https://img.shields.io/badge/NFCA-GATEWAYS-999?style=for-the-badge&logo=&logoColor=white&color=23aa00" ></a> &nbsp; 
+<a href="https://nfca.cc/documentation#gateway_list" target="_blank"><img src="https://img.shields.io/badge/NFCA-GATEWAYS-999?style=for-the-badge&logo=&logoColor=white&color=FF00FF" ></a> &nbsp; 
 
 <br><br>
 
