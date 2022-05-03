@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta name="description" content="" id="description_id">
+  <meta name="keywords" content="" id="keywords_id">
+  <meta name="author" content="" id="author_id"> 
+  
+  <link rel="icon" type="image/x-icon" href="" id="favIcon_id">
+
+  <link rel="canonical" href="" id="canonical_id"/>
+
+  <!-- ethers.js -->
+  <script id="eth_js" type="text/javascript"></script>
+  
+  <!-- qrcode.js -->  
+  <script id="qr_js" type="text/javascript"></script>
+ 
+  <!-- contract.js -->  
+  <script id="contract_js" type="text/javascript"></script>
+
+<script>
+    /*
+  
+    Gateway Info
+    
+    https://nfca.cc --> To get alias
+
+    https://github.com/HermesAteneo/NFCA-Gateway --> Gateway repository
+     
+    https://hermesateneo.medium.com --> by Hermes Ateneo & bros
+
+    ///////////////////////////////////////////////////////////////////////////*/
+
+    
+    //Variables
+    //////////////////////////////////////////////////////
+    var ALIAS
+    var FF
+    var ACCESS
+
+    var FNETWORK
+    var CID
+    var TYPE
+    var KEYWORDS
+    var DESCRIPTION
+
+    var netData
+    var abi
+
+    var BASEURL = './'
+    var ChainId = 137 //Polygon mainnet
+    var url_part = 2; //url position of gateway folder
+
+    var microTime = Date.now()
+
+
+    //Inline Set Alias
+    //////////////////////////////////////////////////////
+
+    //Set default Favicon
+    var iconBaseURL = BASEURL + 'src/icon/nfca.icon.white.squared.svg' + '?v=' + microTime
+    document.getElementById("favIcon_id").setAttribute("href", iconBaseURL )
+
+    //Load dynamic JS
+    eth_js.src  = BASEURL + 'src/js/ethers-5.6.1.umd.min.js' + '?v=' + microTime;  
+    qr_js.src   = BASEURL + 'src/js/awesome-qr.js' + '?v=' + microTime;
+    contract_js.src   = BASEURL + 'src/js/nfca.contract.js' + '?v=' + microTime;   
+
+    
+    //On Window Load
+    //////////////////////////////////////////////////////
+    window.onload = function() {
+      
+      //Print version info
+      var nfca_version = "v."+ jsGatewayVersion +" Beta";
+      var net_version = "mintable mainnet";
+      console.log("NFCA Gateway / " + net_version + " / " + nfca_version);
+      
+      GetAliasFromURL()
+
+      //Inject Version string dinamically
+      var PrintVersion = document.getElementsByClassName('nfca-version');
+      for (var i = 0; i < PrintVersion.length; i++) {
+          PrintVersion[i].innerHTML = net_version;
+      }
+
+      //Show Gateway Home
+      if( ALIAS =="" ){ ContentError('home'); return;}
+
+      //Inject ALIAS string dinamically
+      var PrintAlias = document.getElementsByClassName('print-alias');
+      for (var i = 0; i < PrintAlias.length; i++) {
+          PrintAlias[i].innerHTML = ALIAS;
+      }
+
+      CheckGatewayVersion()
+
+      //Connect to Blockchain
+      //////////////////////////////////////////////////////
+
+      function Connect2Blockchain(){
+
+        NetData = FindNetData(netData, ChainId)
+        console.log("Chain & Contract: " + JSON.stringify( NetData ) )
+
+        ContractAddress = NetData[0].contract
+        ChainRPC        = NetData[0].rpc
+
+        var provider = new ethers.providers.JsonRpcProvider(ChainRPC);
+        var contract = new ethers.Contract(ContractAddress, abi, provider);
+
+        contract.indexOf(ALIAS).then( index => {
+          index = parseInt(index)
+          console.log("Alias --> " + ALIAS + " -  index--> " + index )
+          if(index == 0) { ContentError('404'); return; }
+
+          //Get Alias data
+          contract.RecordsA(index).then( _record => {
+            CID   = _record.CID
+            TYPE  = _record.Type
+            KEYWORDS = _record.KeyWords
+            DESCRIPTION = _record.Description
+
+            if(TYPE == 'ipfs'){ FNETWORK= 'https://ipfs.io/ipfs/'; } //CID of ipfs network
+            if(TYPE == 'sia') { FNETWORK= 'https://siasky.net/'; } //CID of sia network
+            if(TYPE == 'uri') { FNETWORK= ''; } //CID is URL           
+            if(TYPE == 'html') { FNETWORK= ''; } //CID is HTML  
+            if(TYPE == 'text') { FNETWORK= ''; } //CID is text                                 
+            if(TYPE == 'qr') { FNETWORK= ''; } //CID returned as QR Code    
+
+            LoadAliasContent();
+
+          });
+        }).catch(error => { ContentError('beta'); });
+      }//Connect2Blockchain
+
+
+      //Functions onload
+      //////////////////////////////////////////////////////
+
+      //Check Gateway Version 
+      //////////////////////////////////////////////////////
+      function CheckGatewayVersion(){
+        var urlrepoinfo = 'https://raw.githubusercontent.com/HermesAteneo/NFCA-Gateway/main/src/js/nfca.contract.js';
+        fetch(urlrepoinfo).then(response => { 
+          if (!response.ok){ return; }
+          else{  return response.text(); }//To then as data       
+        })
+        .then(data => { eval(data)
+          if( jsGatewayVersion > this.jsGatewayVersion ){
+            console.log("*\nThere is a higher gateway version "+jsGatewayVersion+"\nUpdate from https://github.com/HermesAteneo/NFCA-Gateway\n*")
+          }
+    
+          //Set data from online version to avoid outdated data
+          netData = jsNetData
+          abi = jsABI
+
+          Connect2Blockchain()
+        }).catch(error => { });
+      }
+
+    }//window.onload
+    //////////////////////////////////////////////////////
+
+      
+
+    //Functions inline
+    //////////////////////////////////////////////////////
+
+    //Request Alias from URL
+    //////////////////////////////////////////////////////
+    function GetAliasFromURL(){
+
+      FF = ""; //Folder Files
+
+      //Get url path and params
+      var hostname = window.location.hostname //get hostname
+      var urlpathname = window.location.pathname.replace(new RegExp('////|///|//','g'), "/") //get alias as directory
+      var urlparam = window.location.search;
+
+      //Get alias as param from var ?
+      if(urlparam.indexOf('?') != -1){
+        var  urlpathname = urlparam.split('?')[1]
+        var  parts = urlpathname.split('/')
+        ALIAS = decodeURIComponent( parts[0] )
+
+        for( x = parts.length - url_part + 1; x>=1; x--){
+          if( parts[parts.length - x] != undefined ){
+            FF+= "/" + parts[parts.length - x];
+          }
+        }
+      }
+      //Get alias from directory name
+      else{ 
+        var  parts = urlpathname.split('/')
+        ALIAS = decodeURIComponent( parts[url_part] )
+        
+        for( x = parts.length - url_part -1 ; x>=1; x--){
+          if( parts[parts.length - x] != undefined ){
+            FF+= "/" + parts[parts.length - x];
+          }
+        }
+      }
+
+      //Control of no alias
+      if( ALIAS == undefined  || ALIAS == "undefined" || ALIAS == null  || ALIAS == "null" ){ ALIAS = ""; }
+
+      if( urlpathname.indexOf('/index.html') != -1 ){ ACCESS="local"; ALIAS = ""; }
+      if( window.location.pathname.indexOf('/index.html') != -1 ){ ACCESS="local";}
+      else if( hostname.indexOf('ipfs.') != -1 || hostname.indexOf('siasky.') != -1 || hostname.indexOf('skynet') != -1 || hostname.indexOf('fleek.') != -1 ){ ACCESS="dserver"; }
+      else{ ACCESS="cserver"; }
+
+
+      console.log( "ACCESS: " + ACCESS);
+      console.log( "ALIAS: " + ALIAS);
+      console.log( "FF: " + FF);
+
+      document.title = ALIAS;
+
+      //Set canonical//////////////////
+      var CanonicalURL = 'https://nfca.cc/' + ALIAS
+      document.getElementById("canonical_id").setAttribute("href", CanonicalURL )
+    }  
+  
+
+          
+    //Load Alias Content
+    //////////////////////////////////////////////////////
+    function LoadAliasContent(){
+            
+      var URL = FNETWORK + CID + FF + '?v=' + microTime;
+
+      //If type is an URL need to make a redirection to avoid CORS blocks//
+      if(TYPE == 'uri' ){ 
+        var URL = FNETWORK + CID + FF + '?from=' + BASEURL + ALIAS; 
+        document.location = URL; return; 
+      }
+      //If type is html, load the code
+      if(TYPE == 'html' ){
+        document.getElementById('html_content').innerHTML = '<style>body{margin: 0;}</style>';
+        document.getElementById('html_content').innerHTML += CID;
+        document.title = decodeURIComponent( getTitle(CID) );
+        //ContentLoaded();
+        return;
+      } 
+      //If type is text, load the code
+      if(TYPE == 'text' ){
+        document.getElementById('qr_block').remove()
+        document.getElementById('obj').remove() 
+        document.getElementById('text_content').innerHTML = '<h1>' + ALIAS + '</h1>' + CID;
+        ContentLoaded();
+        return;
+      }
+      //If type is qr, create a QRCode of CID 
+      if(TYPE == 'qr' ){
+        document.getElementById('text_block').remove()
+        document.getElementById('obj').remove()       
+        new AwesomeQR.AwesomeQR({ text: CID, size: 300, margin:0,
+          logoImage: BASEURL + 'src/icon/nfca.icon.black.rounded.svg' + '?v=' + microTime,
+          logoMargin: 5
+       })
+        .draw().then(dataURL => { document.getElementById('qr_content').innerHTML = "<img src='"+dataURL+"'/>";   });
+        ContentLoaded();
+        return;
+      }
+
+      //Set Meta content/////////
+      document.getElementById("keywords_id").setAttribute("content", KEYWORDS );
+      document.getElementById("description_id").setAttribute("content", DESCRIPTION );
+
+      //If type is ipfs, sia, ...
+
+      //Get document info //////////////
+      fetch(URL).then(response => { 
+          console.log("Response.ok: " + response.ok );
+          console.log("Response.status: " + response.status );
+          console.log("Response.statusText : " + response.statusText  );
+
+          if (!response.ok){ ContentError(response.status); return; }
+          else{ return response.text();  }//To then as data
+      })
+      .then(data => {
+        
+        var ContentTitle = decodeURIComponent( getTitle(data) );
+
+        var httpErrors = ["400", "401", "403", "404", "408", "410", "500", "502", "503", "504"];    
+        var wasError = false;
+        httpErrors.forEach(function(error) {
+            if(ContentTitle.indexOf(error) !== -1){ console.log("errors " + error);
+              wasError=true; return;
+            }
+        });    
+        
+        //If title include error/////////////
+        if(wasError){  ContentError(error); return; } 
+        //Ok, load content /////////////////
+        else{   
+          //Load title//////////////
+          document.title = ContentTitle;
+
+          //Load Favicon///////////
+          var favIconURL = decodeURIComponent( getFavIcon(data) ); 
+
+          if( favIconURL.includes("http://") || favIconURL.includes("https://") ){
+            document.getElementById("favIcon_id").setAttribute("href", favIconURL ); 
+          }
+          else if( favIconURL.includes("data:") || favIconURL.includes("/src/") ){
+            document.getElementById("favIcon_id").setAttribute("href", favIconURL );
+          }
+          else{
+            document.getElementById("favIcon_id").setAttribute("href", FNETWORK + CID + '/' + favIconURL );
+          }
+
+          //Load content////////////  
+          obj.src = URL;
+
+          obj.onload = function(){  ContentLoaded();  document.getElementById('no_obj').style.display = 'none'; }//obj onLoad  
+        }
+
+      
+      }); 
+
+    }//function LoadAliasContent 
+
+
+
+
+    //Other Functions
+    //////////////////////////////////////////////////////
+
+    function getTitle(e){
+      var t=/<title [^>]+>(.*?)<\/title>/g.exec(e);if(t&&t[1])return t[1].replace(/<\/?title>/g," ").replace(/\s+/," ");
+      
+      if(t == undefined){
+        var t=/<title>(.*?)<\/title>/g.exec(e);if(t&&t[1])return t[1].replace(/<\/?title>/g," ").replace(/\s+/," ");
+      }
+      if(t == undefined){ return ALIAS; }
+    }
+
+    function getFavIcon(e){
+      var rel=/<link[^>]*?rel=(["\'])?((?:.(?!\1|>))*.?)\1?/g.exec(e);
+      if(rel == undefined){ return iconBaseURL; }
+
+      if(rel[2]=="icon" || rel[2]=="shortcut icon"){
+        var f=/<link[^>]*?href=(["\'])?((?:.(?!\1|>))*.?)\1?/g.exec(e);
+        if(f == undefined){ return iconBaseURL; }
+        return f[2];
+      }
+      return iconBaseURL;
+    }
+
+    function ContentLoaded(){
+      document.getElementById('loader-layer').remove()
+      document.getElementById('error-layer').remove()
+    }
+
+    function ContentError(status){
+      document.getElementById('no_obj').style.display = 'none';
+      document.getElementById('loader-layer').style.display = 'none';
+      document.getElementById('error-layer').style.display = 'block';
+        document.getElementById('error-status').innerHTML = status;
+      if(status == "beta"){
+        document.getElementById('error-layer').style.display = 'none';
+        document.getElementById('beta-layer').style.display = 'block';
+      }         
+      if(status == "home"){
+        document.getElementById('gateway_tx').innerHTML = 'NFCA Gateway';
+        document.getElementById('gateway_sl').innerHTML = '<b style="font-weight: 100;">Decentralized censorship resistant alias & content</b>';
+        document.getElementById('gateway_get').innerHTML = 'Get an alias';
+        if(ACCESS=="local"){  document.getElementById('gateway_ex').innerHTML = '<a class="tx-gold" href="./index.html?Alias-Tutorial">See an example'; }
+        if(ACCESS=="cserver"){ document.getElementById('gateway_ex').innerHTML = '<a class="tx-gold" href="./Alias-Tutorial">See an example'; }
+        if(ACCESS=="dserver"){ document.getElementById('gateway_ex').innerHTML = '<a class="tx-gold" href="./?Alias-Tutorial">See an example'; }
+      }   
+    }  
+       
+    function FindNetData(_data, _network) {
+      var NetworksArray = _data.networks;
+      for (var i = 0; i < NetworksArray.length; i++) {
+          if (NetworksArray[i].id == _network) {
+              return(  NetworksArray[i].netdata  );
+          }
+      }
+    }
+
+    function ToHome(){
+      window.location.href = "https://nfca.cc"
+    }
+    function ToRegister(){
+      var _link= ""
+      if( ALIAS != "" ) { _link = "###"+ALIAS }
+      window.location.href = "https://nfca.cc/get-alias" + _link
+    }
+    function ToDev(){
+      var _link= ""
+      if( ACCESS == "local" ) { _link = "/index.html" }
+      window.location.href = "./dev" + _link
+    }
+</script>
+
+</head>
+
+<body id="html_content" >
+
+<div id="no_obj">
+
+  <div id="qr_block" class="expanded-html flex-container">
+    <div class="flex-box">
+      <div id="qr_content"></div>
+    </div>
+  </div> 
+
+  <div id="text_block" class="expanded-html flex-container-top">
+    <div class="flex-box">
+      <div id="text_content"></div> 
+    </div>
+  </div>
+
+</div>
+
+  <iframe id="obj" frameBorder="0"></iframe> 
+
+  <div id="beta-layer" style="display: none;">
+    <div class="loader flex-container">
+      <div class="flex-box">
+          <div class="nfca-slash-logo"><img src="./src/icon/nfca.icon.black.rounded.svg" width="100%"></div> 
+      </div>
+    </div>
+
+    <div class="loader flex-container">
+      <div class="flex-box"> 
+          <h2>NFCA is still in beta test </h2>
+          <p class="pointer tx-pink"> mintable version is offline </p>
+          <p class="pointer grow" onclick="ToDev()"> Try development version </p>
+      </div>
+    </div>
+  </div>
+ 
+
+  <div id="loader-layer">
+    <div class="loader flex-container">
+      <div class="flex-box"> 
+          <div class="nfca-slash-logo"><img src="./src/icon/nfca.icon.black.rounded.svg" width="100%"></div> 
+      </div>
+    </div>
+
+    <div class="loader flex-container">
+      <div class="flex-box"> 
+          <h2>Loading content of </h2>
+          <h1 class="print-alias tx-gold tx-thin"></h1>
+      </div>
+    </div>
+  </div>
+
+  <div id="error-layer" style="display: none;">
+    <div class="loader flex-container">
+      <div class="flex-box"> 
+          <div class="tx-right"><span class="tx-thin bg-fill bg-black rounded tx-gold b nfca-version" style="font-size: small;"></span></div>
+          <h1 id="gateway_tx" class="bg-black bg-fill rounded nfca-anim tx-pink"><span class="">Error <span id="error-status">404</span> </span> <span class="tx-thin"> loading content of</span> </h1>
+          <h2 id="gateway_sl" class="bg-black bg-fill rounded-right">
+            <div class="f-left" style="padding-top:2.5px; padding-right:10px;">
+
+            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="30" height="30" fill="black"/>
+              <path d="M17.4385 3H21L12.5455 27H9L17.4385 3Z" fill="white"/>
+            </svg>
+
+            </div>           
+            <span class="print-alias tx-gold f-left"></span> <span class="tx-thin">&nbsp; content not found</span></h2>
+          <p id="gateway_get" class="pointer grow" onclick="ToRegister()"> Try to get this alias </p>
+          <p id="gateway_ex" class="pointer grow"></p>
+      </div>
+    </div>
+  </div>
+
+  <style>
+
+    body{ font-family: Segoe, "Segoe UI", "Verdana", "Ubuntu", "Georgia";  margin: 0;  overflow-y:hidden;}
+
+    #obj{ width: 100%; height: 100vh; }
+    
+    body, #loader-layer, .loader{ overflow: hidden; }
+
+    .expanded{ position: absolute;  top:0; left:0; right:0; bottom:0; }
+    .expanded-html{ overflow-y: auto; position: absolute; width: 100%; height: 100%; margin: auto; }
+
+    #text_content h1{  text-align: center;}
+    #text_content{ max-width: 500px; margin: auto; text-align: justify;}
+
+
+    .loader{ position: absolute; top:0; left:0; right:0; bottom:0; color: #fff;  padding: auto; background-color: rgba(0,0,0,0.85);  }
+    .loader h1{ padding: auto;}
+  
+    .flex-container-top{
+      display: flex;            
+      flex-direction: column;   
+      align-items: center; 
+    }
+    .flex-container{
+      display: flex;   
+      flex-direction: column;  
+      justify-content: center; 
+      align-items: center;  
+    }
+    .flex-box {
+        margin: 5px;
+        text-align: center; 
+    }  
+
+    .nfca-anim{position: relative; opacity: 0.8;  animation: animatedBox 6s linear infinite;}
+
+    @keyframes animatedBox {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); opacity: 0.99; }
+    100% { transform: scale(1); }
+    }
+
+    .nfca-slash-logo img{ filter: invert(0); opacity: 0.2; width: 50vw; height: 50vh; animation: animatedLogoImg 6s linear infinite;}
+    .nfca-slash-logo { position: relative; }
+
+    @keyframes animatedLogoImg {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); opacity: 0.99; }
+      95% { transform: rotate(0deg);}
+    100% { transform: scale(1); transform: rotate(180deg); }
+    }
+
+    .tx-gold { color: #ffb700; }
+    .tx-pink { color: #FF41B4; }
+    .tx-thin { font-weight: 300;}
+    .tx-left{ text-align: left; }
+    .tx-right{ text-align: right; }
+    .tx-purple { color: #A463F2; }
+    .tx-green { color: #19A974; }
+    .tx-black { color: #000; }
+
+    .bg-gold { background-color: #ffb700; }
+    .bg-pink { background-color: #FF41B4; }
+    .bg-purple { background-color: #5E2CA5; }
+    .bg-green { background-color: #19A974; }
+    .bg-black { background-color: #000; }
+    .bg-fill { padding: 4px 20px 7px 20px; }
+
+    .rounded{ border-radius: 100px !important; }
+
+    .rounded-left{ 
+      border-top-left-radius: 100px !important; 
+      border-bottom-left-radius: 100px !important;
+    }
+    .rounded-right{ 
+      border-top-right-radius: 100px !important;
+      border-bottom-right-radius: 100px !important;
+    }
+
+    .grow { -moz-osx-font-smoothing: grayscale; -webkit-backface-visibility: hidden; backface-visibility: hidden; -webkit-transform: translateZ( 0 ); transform: translateZ( 0 ); transition: -webkit-transform .25s ease-out; transition: transform .25s ease-out; transition: transform .25s ease-out, -webkit-transform .25s ease-out; }
+    .grow:hover, .grow:focus { -webkit-transform: scale( 1.05 ); transform: scale( 1.05 ); }
+    .grow:active { -webkit-transform: scale( .90 ); transform: scale( .90 ); }
+    
+    .f-left{float:left;}
+    .f-right{float:right;}
+    .b{ font-weight: bold;}
+    .pointer{ cursor: pointer;}
+  </style>  
+  
+</body>
+</html>
