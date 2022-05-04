@@ -16,7 +16,7 @@ Solution for decentralized censorship resistant naming & content
 
 NFCA project was born to assign an easy-to-remember alias or name to IPFS file references or directories, now is much more.<br>
 
-Currently, an alias can be assigned toany decentralized file network (IPFS, Sia Skynet, etc...), system, text, html, web2 URI or even generate a QR code.
+Currently, an alias can be assigned toany decentralized file network (IPFS, Sia Skynet, etc...) system, text, html, web2 URI or even generate a QR code as content stored in the blockchain.
 
 
 
