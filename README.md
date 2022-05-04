@@ -45,11 +45,11 @@ You can access any NFCA using gateway from any server, adding an <b>slash "/" </
 ```/gateway/dev/ALIAS``` (development version)
 
 
-<br> or adding an <b>quotation mark "?" </b> and the alias for IPFS and Sia gateways<br>
+<br> or adding an <b>quotation mark "?" </b> and the alias for distributed IPFS and Sia networks gateways<br>
 
-```/gateway?ALIAS```
+```/gateway/?ALIAS```
 
-```/gateway/dev?ALIAS``` (development version)
+```/gateway/dev/?ALIAS``` (development version)
 
 
 <br>You can access to NFCA universe from local too without a server. In this case, use the question mark "?" after html file <br>
