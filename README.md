@@ -38,7 +38,7 @@ An alias is the memorable route to access to any decentralized content stored in
 Any NFCA can be accessed from any NFCA gateway. Only need to know the alias that is the key to open the content
 
 
-To access any NFCA of a private server gateway, add to url an <b>slash "/" </b> and the alias 
+<br>To access any NFCA of a private server gateway, add to url an <b>slash "/" </b> and the alias 
 
 ```/gateway/ALIAS```
 
