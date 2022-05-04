@@ -38,20 +38,20 @@ An alias is the memorable route to access to any decentralized content stored in
 Any NFCA can be accessed from any NFCA gateway. Only need to know the alias that is the key to open the content
 
 
-<br>To access any NFCA of a private server gateway, add to url an <b>slash "/" </b> and the alias 
+<br>To access any NFCA of a private server gateway, add to the url a <b>slash "/" </b> and the alias 
 
 ```/gateway/ALIAS```
 
 ```/gateway/dev/ALIAS``` (development version)
 
-<br>To access any NFCA of distributed IPFS and Sia networks gateway, add to url an <b>quotation mark "?" </b> and the alias <br>
+<br>To access any NFCA of distributed IPFS and Sia networks gateway, add to the url a <b>slash "/" </b>, a <b>quotation mark "?" </b> and the alias <br>
 
 ```/gateway/?ALIAS```
 
 ```/gateway/dev/?ALIAS``` (development version)
 
 
-<br>You can access to NFCA universe from local too without a server. In this case, use the question mark "?" after html file <br>
+<br>You can access to NFCA universe from local too without a server. In this case, add a question mark "?" after html file <br>
 
 ```/gateway/index.html?ALIAS``` 
 
