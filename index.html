@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title></title>
+  <title>NFCA Gateway</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -54,7 +54,7 @@
 
     var BASEURL = './'
     var ChainId = 137 //Polygon mainnet
-    var url_part = 2; //url position of gateway folder
+    var URL_Pos = 2; //url position of gateway dir // 2-> Defaul. Local and first subdirectory // 1-> Subdomains // 3-> second subdirectory ... 
 
     var microTime = Date.now()
 
@@ -90,7 +90,7 @@
       }
 
       //Show Gateway Home
-      if( ALIAS =="" ){ ContentError('home'); return;}
+      if( ALIAS =="" ){ ContentError('home'); CheckGatewayVersion(true); return;}
 
       //Inject ALIAS string dinamically
       var PrintAlias = document.getElementsByClassName('print-alias');
@@ -98,12 +98,12 @@
           PrintAlias[i].innerHTML = ALIAS;
       }
 
-      CheckGatewayVersion()
+      Connect2Blockchain(jsNetData, jsABI)
 
       //Connect to Blockchain
       //////////////////////////////////////////////////////
-
-      function Connect2Blockchain(){
+      var ConnError = 0;
+      function Connect2Blockchain(netData, abi){
 
         NetData = FindNetData(netData, ChainId)
         console.log("Chain & Contract: " + JSON.stringify( NetData ) )
@@ -134,9 +134,10 @@
             if(TYPE == 'qr') { FNETWORK= ''; } //CID returned as QR Code    
 
             LoadAliasContent();
+            CheckGatewayVersion(true);
 
           });
-        }).catch(error => { ContentError('beta'); });
+        }).catch(error => { if(ConnError < 1){ CheckGatewayVersion(false); ConnError++; } ContentError('beta'); });
       }//Connect2Blockchain
 
 
@@ -145,7 +146,7 @@
 
       //Check Gateway Version 
       //////////////////////////////////////////////////////
-      function CheckGatewayVersion(){
+      function CheckGatewayVersion(ok){
         var urlrepoinfo = 'https://raw.githubusercontent.com/HermesAteneo/NFCA-Gateway/main/src/js/nfca.contract.js';
         fetch(urlrepoinfo).then(response => { 
           if (!response.ok){ return; }
@@ -160,8 +161,9 @@
           netData = jsNetData
           abi = jsABI
 
-          Connect2Blockchain()
-        }).catch(error => { });
+          if(!ok){ Connect2Blockchain(netData, abi) }
+
+        }).catch(error => { return; });
       }
 
     }//window.onload
@@ -189,7 +191,7 @@
         var  parts = urlpathname.split('/')
         ALIAS = decodeURIComponent( parts[0] )
 
-        for( x = parts.length - url_part + 1; x>=1; x--){
+        for( x = parts.length - URL_Pos + 1; x>=1; x--){
           if( parts[parts.length - x] != undefined ){
             FF+= "/" + parts[parts.length - x];
           }
@@ -198,9 +200,9 @@
       //Get alias from directory name
       else{ 
         var  parts = urlpathname.split('/')
-        ALIAS = decodeURIComponent( parts[url_part] )
+        ALIAS = decodeURIComponent( parts[URL_Pos] )
         
-        for( x = parts.length - url_part -1 ; x>=1; x--){
+        for( x = parts.length - URL_Pos -1 ; x>=1; x--){
           if( parts[parts.length - x] != undefined ){
             FF+= "/" + parts[parts.length - x];
           }
@@ -220,7 +222,7 @@
       console.log( "ALIAS: " + ALIAS);
       console.log( "FF: " + FF);
 
-      document.title = ALIAS;
+      if( ALIAS !="" ){ document.title = ALIAS; }
 
       //Set canonical//////////////////
       var CanonicalURL = 'https://nfca.cc/' + ALIAS

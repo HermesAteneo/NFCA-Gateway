@@ -1,4 +1,4 @@
-var jsGatewayVersion = "0.2.2"
+var jsGatewayVersion = "0.2.3"
 
 var jsNetData = {
   "networks" : [
