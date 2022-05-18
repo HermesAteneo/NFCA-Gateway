@@ -26,7 +26,7 @@ var jsNetData = {
                           "provider"  : "https://rpc.testnet.fantom.network",
                           "rpc"       : "https://rpc.testnet.fantom.network",
                           "scan"      : "https://testnet.ftmscan.com",
-                          "contract"  : "0x9Abe19c2A0577eb674b69Cb87492D0A16Cd4C09F"
+                          "contract"  : "0xBBc90A420bBe5E216f1c1737962b793E89A6b03e"
                       }
                   ] 
       }
@@ -34,7 +34,7 @@ var jsNetData = {
   ]
 }
 
-
+ 
 var jsABI = [
 	{
 		"anonymous": false,
@@ -90,19 +90,6 @@ var jsABI = [
 		"anonymous": false,
 		"inputs": [
 			{
-				"indexed": false,
-				"internalType": "address",
-				"name": "account",
-				"type": "address"
-			}
-		],
-		"name": "Paused",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
 				"indexed": true,
 				"internalType": "address",
 				"name": "from",
@@ -125,19 +112,6 @@ var jsABI = [
 		"type": "event"
 	},
 	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "address",
-				"name": "account",
-				"type": "address"
-			}
-		],
-		"name": "Unpaused",
-		"type": "event"
-	},
-	{
 		"inputs": [
 			{
 				"internalType": "uint256",
@@ -146,19 +120,6 @@ var jsABI = [
 			}
 		],
 		"name": "Admin_DeleteMultiChar",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "index",
-				"type": "uint256"
-			}
-		],
-		"name": "Admin_DeleteNoValidAlias",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -197,19 +158,6 @@ var jsABI = [
 				"type": "string"
 			}
 		],
-		"name": "Admin_NoValidAlias2Struct",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "str",
-				"type": "string"
-			}
-		],
 		"name": "Admin_NoValidChars2Struct",
 		"outputs": [],
 		"stateMutability": "nonpayable",
@@ -236,8 +184,26 @@ var jsABI = [
 	{
 		"inputs": [
 			{
+				"internalType": "address",
+				"name": "_to",
+				"type": "address"
+			},
+			{
 				"internalType": "uint256",
-				"name": "_index",
+				"name": "_amount",
+				"type": "uint256"
+			}
+		],
+		"name": "Contract2Address",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "i",
 				"type": "uint256"
 			}
 		],
@@ -325,71 +291,27 @@ var jsABI = [
 				"type": "string"
 			},
 			{
+				"internalType": "address",
+				"name": "_Agent",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_Owner",
+				"type": "address"
+			},
+			{
 				"internalType": "string",
 				"name": "_MetaData",
 				"type": "string"
+			},
+			{
+				"internalType": "bool",
+				"name": "_Mint",
+				"type": "bool"
 			}
 		],
 		"name": "NewRecord",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "pause",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_Alias",
-				"type": "string"
-			}
-		],
-		"name": "PaymentRequest",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "PayToOwner",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "renounceOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "safeMint",
 		"outputs": [],
 		"stateMutability": "payable",
 		"type": "function"
@@ -480,35 +402,32 @@ var jsABI = [
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "_n",
+				"name": "_AMax",
 				"type": "uint256"
-			}
-		],
-		"name": "SetMintLongPrice",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
+			},
 			{
 				"internalType": "uint256",
-				"name": "_n",
+				"name": "_KMax",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_DMax",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_SEMax",
 				"type": "uint256"
 			}
 		],
-		"name": "SetMintShortPrice",
+		"name": "SetMax",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"inputs": [
-			{
-				"internalType": "bool",
-				"name": "_long",
-				"type": "bool"
-			},
 			{
 				"internalType": "bool",
 				"name": "_short",
@@ -516,12 +435,17 @@ var jsABI = [
 			},
 			{
 				"internalType": "bool",
-				"name": "_Mlong",
+				"name": "_long",
 				"type": "bool"
 			},
 			{
 				"internalType": "bool",
 				"name": "_Mshort",
+				"type": "bool"
+			},
+			{
+				"internalType": "bool",
+				"name": "_Mlong",
 				"type": "bool"
 			}
 		],
@@ -534,35 +458,37 @@ var jsABI = [
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "_n",
+				"name": "_psa",
 				"type": "uint256"
-			}
-		],
-		"name": "SetPLA",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
+			},
 			{
 				"internalType": "uint256",
-				"name": "_n",
+				"name": "_pla",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_pmsa",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_pmla",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_afee",
 				"type": "uint256"
 			}
 		],
-		"name": "SetPSA",
+		"name": "SetPrices",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_BaseURL",
-				"type": "string"
-			},
 			{
 				"internalType": "string",
 				"name": "_ImgURL",
@@ -617,32 +543,12 @@ var jsABI = [
 	},
 	{
 		"inputs": [],
-		"name": "unpause",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
 		"stateMutability": "nonpayable",
 		"type": "constructor"
 	},
 	{
 		"inputs": [],
 		"name": "Admin_GetMultiChar",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "Admin_GetNoValidAlias",
 		"outputs": [
 			{
 				"internalType": "string",
@@ -667,19 +573,32 @@ var jsABI = [
 		"type": "function"
 	},
 	{
+		"inputs": [],
+		"name": "AFee",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "string",
-				"name": "alias_",
+				"name": "",
 				"type": "string"
 			}
 		],
-		"name": "AliasExists",
+		"name": "AliasIndex",
 		"outputs": [
 			{
-				"internalType": "bool",
+				"internalType": "uint256",
 				"name": "",
-				"type": "bool"
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -724,6 +643,19 @@ var jsABI = [
 		"type": "function"
 	},
 	{
+		"inputs": [],
+		"name": "AMax",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "address",
@@ -743,33 +675,8 @@ var jsABI = [
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "text",
-				"type": "string"
-			}
-		],
-		"name": "BasicCount",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "count1",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "pure",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_Alias",
-				"type": "string"
-			}
-		],
-		"name": "CalculatePrice",
+		"inputs": [],
+		"name": "DMax",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -778,49 +685,6 @@ var jsABI = [
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "what",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "where",
-				"type": "string"
-			}
-		],
-		"name": "ContainWord",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "found",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "pure",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "str",
-				"type": "string"
-			}
-		],
-		"name": "CountUTF8String",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "length",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "pure",
 		"type": "function"
 	},
 	{
@@ -831,25 +695,6 @@ var jsABI = [
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "GenerateTokenURI",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
 			}
 		],
 		"stateMutability": "view",
@@ -877,55 +722,12 @@ var jsABI = [
 	{
 		"inputs": [
 			{
-				"internalType": "string",
-				"name": "what",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "where",
-				"type": "string"
-			}
-		],
-		"name": "HowManyRepeated",
-		"outputs": [
-			{
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
 			}
 		],
-		"stateMutability": "pure",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_owner",
-				"type": "address"
-			}
-		],
-		"name": "indexesByOwner",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "indexes",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_alias",
-				"type": "string"
-			}
-		],
-		"name": "indexOf",
+		"name": "IndexState",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -964,7 +766,7 @@ var jsABI = [
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "index",
+				"name": "i",
 				"type": "uint256"
 			}
 		],
@@ -981,100 +783,11 @@ var jsABI = [
 	},
 	{
 		"inputs": [],
-		"name": "IsOwner",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "LongPaused",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "MintLongPrice",
+		"name": "KMax",
 		"outputs": [
 			{
 				"internalType": "uint256",
 				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "MintShortPrice",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "MLongPaused",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "MShortPaused",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "MultiChars",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "Symbol",
-				"type": "string"
-			},
-			{
-				"internalType": "uint256",
-				"name": "Len",
 				"type": "uint256"
 			}
 		],
@@ -1088,44 +801,6 @@ var jsABI = [
 			{
 				"internalType": "string",
 				"name": "",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "NoValidAlias",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "Word",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "NoValidChars",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "Symbol",
 				"type": "string"
 			}
 		],
@@ -1153,7 +828,46 @@ var jsABI = [
 	},
 	{
 		"inputs": [],
-		"name": "paused",
+		"name": "PausedLong",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "PausedMLong",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "PausedMShort",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "PausedShort",
 		"outputs": [
 			{
 				"internalType": "bool",
@@ -1167,6 +881,32 @@ var jsABI = [
 	{
 		"inputs": [],
 		"name": "PLA",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "PMLA",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "PMSA",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -1217,12 +957,12 @@ var jsABI = [
 			},
 			{
 				"internalType": "string",
-				"name": "Description",
+				"name": "KeyWords",
 				"type": "string"
 			},
 			{
 				"internalType": "string",
-				"name": "KeyWords",
+				"name": "Description",
 				"type": "string"
 			},
 			{
@@ -1241,8 +981,13 @@ var jsABI = [
 				"type": "uint256"
 			},
 			{
-				"internalType": "address payable",
-				"name": "Owner_Wallet",
+				"internalType": "address",
+				"name": "WOwner",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "WAgent",
 				"type": "address"
 			},
 			{
@@ -1256,12 +1001,12 @@ var jsABI = [
 	},
 	{
 		"inputs": [],
-		"name": "ShortPaused",
+		"name": "RecordsByOwner",
 		"outputs": [
 			{
-				"internalType": "bool",
+				"internalType": "uint256[]",
 				"name": "",
-				"type": "bool"
+				"type": "uint256[]"
 			}
 		],
 		"stateMutability": "view",
@@ -1271,21 +1016,41 @@ var jsABI = [
 		"inputs": [
 			{
 				"internalType": "string",
-				"name": "str",
+				"name": "_kword",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_where",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_type",
 				"type": "string"
 			},
 			{
 				"internalType": "uint256",
-				"name": "startIndex",
+				"name": "_mint_ts",
 				"type": "uint256"
 			},
 			{
 				"internalType": "uint256",
-				"name": "endIndex",
+				"name": "_reg_ts",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_end",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_qty",
 				"type": "uint256"
 			}
 		],
-		"name": "Substring",
+		"name": "SE_ByKeyWord",
 		"outputs": [
 			{
 				"internalType": "string",
@@ -1293,7 +1058,20 @@ var jsABI = [
 				"type": "string"
 			}
 		],
-		"stateMutability": "pure",
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "SEMax",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -1332,49 +1110,6 @@ var jsABI = [
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "index",
-				"type": "uint256"
-			}
-		],
-		"name": "tokenByIndex",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "owner",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "index",
-				"type": "uint256"
-			}
-		],
-		"name": "tokenOfOwnerByIndex",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
 				"name": "tokenId",
 				"type": "uint256"
 			}
@@ -1394,28 +1129,15 @@ var jsABI = [
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "",
+				"name": "_state",
 				"type": "uint256"
 			}
 		],
-		"name": "TokenURI",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "Json",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "totalRecords",
+		"name": "TotalRecords",
 		"outputs": [
 			{
 				"internalType": "uint256",
-				"name": "",
+				"name": "qty",
 				"type": "uint256"
 			}
 		],
@@ -1436,4 +1158,3 @@ var jsABI = [
 		"type": "function"
 	}
 ]
-

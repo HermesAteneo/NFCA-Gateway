@@ -114,7 +114,7 @@
         var provider = new ethers.providers.JsonRpcProvider(ChainRPC);
         var contract = new ethers.Contract(ContractAddress, abi, provider);
 
-        contract.indexOf(ALIAS).then( index => {
+        contract.AliasIndex(ALIAS).then( index => {
           index = parseInt(index)
           console.log("Alias --> " + ALIAS + " -  index--> " + index )
           if(index == 0) { ContentError('404'); return; }
@@ -128,10 +128,14 @@
 
             if(TYPE == 'ipfs'){ FNETWORK= 'https://ipfs.io/ipfs/'; } //CID of ipfs network
             if(TYPE == 'sia') { FNETWORK= 'https://siasky.net/'; } //CID of sia network
+            if(TYPE == 'arweave') { FNETWORK= 'https://arweave.net/'; } //CID of arweave network
+            if(TYPE == 'swarm') { FNETWORK= 'https://swarm-gateways.net/bzz:/'; } //CID of swarm network
             if(TYPE == 'uri') { FNETWORK= ''; } //CID is URL           
+            if(TYPE == 'redirect') { FNETWORK= ''; } //CID is URL           
             if(TYPE == 'html') { FNETWORK= ''; } //CID is HTML  
             if(TYPE == 'text') { FNETWORK= ''; } //CID is text                                 
-            if(TYPE == 'qr') { FNETWORK= ''; } //CID returned as QR Code    
+            if(TYPE == 'qr') { FNETWORK= ''; } //CID returned as QR Code   
+            if(TYPE == 'plain') { var URL = 'https://nfca.cc/dev/' + ALIAS;  document.location = URL; return; } //CID returned as plain text (only possible in nfca.cc server)
 
             LoadAliasContent();
             CheckGatewayVersion(true);
@@ -235,11 +239,11 @@
     //////////////////////////////////////////////////////
     function LoadAliasContent(){
             
-      var URL = FNETWORK + CID + FF + '?v=' + microTime;
+      var URL = FNETWORK + CID + FF;
 
       //If type is an URL need to make a redirection to avoid CORS blocks//
-      if(TYPE == 'uri' ){ 
-        var URL = FNETWORK + CID + FF + '?from=' + BASEURL + ALIAS; 
+      if(TYPE == 'redirect' ){ 
+        var URL = FNETWORK + CID + FF; 
         document.location = URL; return; 
       }
       //If type is html, load the code
@@ -275,31 +279,38 @@
       document.getElementById("keywords_id").setAttribute("content", KEYWORDS );
       document.getElementById("description_id").setAttribute("content", DESCRIPTION );
 
-      //If type is ipfs, sia, ...
 
-      //Get document info //////////////
+
+      //If type is ipfs,arweave, sia ...
+      
+      console.log("URL: " + URL)
+
       fetch(URL).then(response => { 
           console.log("Response.ok: " + response.ok );
           console.log("Response.status: " + response.status );
           console.log("Response.statusText : " + response.statusText  );
 
-          if (!response.ok){ ContentError(response.status); return; }
-          else{ return response.text();  }//To then as data
+          if (response.ok){ return response.text(); }
+          ContentError(response.status); return;
+
       })
-      .then(data => {
-        
+      .then(data => { ShowIPFS( data ); })
+      .catch((error) => { ContentError(''); return; });
+
+      function ShowIPFS(data) {
+
         var ContentTitle = decodeURIComponent( getTitle(data) );
 
-        var httpErrors = ["400", "401", "403", "404", "408", "410", "500", "502", "503", "504"];    
+        var httpErrors = ["400", "401", "403", "404", "408", "410", "500", "502", "503", "504", "This page cannot be found, yet", "invalid ipfs path: invalid path"];    
         var wasError = false;
         httpErrors.forEach(function(error) {
-            if(ContentTitle.indexOf(error) !== -1){ console.log("errors " + error);
-              wasError=true; return;
-            }
-        });    
-        
+          if(ContentTitle.indexOf(error) !== -1){ console.log("errors " + error);
+            wasError=error; return;
+          }           
+        });
+
         //If title include error/////////////
-        if(wasError){  ContentError(error); return; } 
+        if(wasError!=false){  ContentError(wasError); return; } 
         //Ok, load content /////////////////
         else{   
           //Load title//////////////
@@ -324,8 +335,7 @@
           obj.onload = function(){  ContentLoaded();  document.getElementById('no_obj').style.display = 'none'; }//obj onLoad  
         }
 
-      
-      }); 
+      }
 
     }//function LoadAliasContent 
 
@@ -357,8 +367,8 @@
     }
 
     function ContentLoaded(){
-      document.getElementById('loader-layer').remove()
       document.getElementById('error-layer').remove()
+      document.getElementById('loader-layer').remove()
     }
 
     function ContentError(status){
@@ -404,13 +414,16 @@
     }    
     function FooterClose(){
       document.getElementById('footer').style.display = 'none';
+      document.getElementById('html_content').style.marginBottom = '10px';
+      if(document.getElementById('obj')){ document.getElementById('obj').style.height = '100vh'; }
+      if(document.getElementById('text_block')){ document.getElementById('text_block').style.height = '100vh'; }
     }
 
 </script>
 
 </head>
 
-<body id="html_content" >
+<body id="html_content" style="margin-bottom: 50px;">
 
 <div id="no_obj">
 
@@ -504,16 +517,14 @@
     footer a:hover{ color:#f0f; }
     .footer-close{ float: right; cursor: pointer; margin-right: 10px;}
 
-    @media (max-width: 400px) {
-      footer { font-size: 7px !important;}
-    }
-
-    #obj{ width: 100%; height: 100vh; }
+    #obj{ width: 100%; height: calc(100vh - 24px); background-color: #fff; }
     
     body, #loader-layer, .loader{ overflow: hidden; }
 
     .expanded{ position: absolute;  top:0; left:0; right:0; bottom:0; }
     .expanded-html{ overflow-y: auto; position: absolute; width: 100%; height: 100%; margin: auto; }
+
+    #text_block{ height: calc(100vh - 24px); }
 
     #text_content h1{  text-align: center;}
     #text_content{ max-width: 500px; margin: auto; text-align: justify;}
@@ -591,6 +602,13 @@
     .f-right{float:right;}
     .b{ font-weight: bold;}
     .pointer{ cursor: pointer;}
+
+
+    @media (max-width: 400px) {
+      footer { font-size: 9px !important;}
+      .print-alias{ font-size: 8vw !important;}
+    }
+
   </style>  
   
 </body>
