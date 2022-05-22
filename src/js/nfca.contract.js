@@ -1,4 +1,4 @@
-var jsGatewayVersion = "0.2.3"
+var jsGatewayVersion = "0.2.4"
 
 var jsNetData = {
   "networks" : [
@@ -17,6 +17,20 @@ var jsNetData = {
                   ]
       },
       {
+          "id": 80001,
+          "netdata": [
+                      {
+                          "chain"     : "80001",
+                          "name"      : "Polygon Testnet",
+                          "symbol"    : "MATIC",
+                          "provider"  : "https://speedy-nodes-nyc.moralis.io/ccd4141adcf361f630c9ce17/polygon/mumbai",
+                          "rpc"       : "https://matic-mumbai.chainstacklabs.com",
+                          "scan"      : "https://mumbai.polygonscan.com",
+                          "contract"  : "0x0E1B9D687c7a4772c29D1B7AB1aE93eCAf7A309A"
+                      }
+                  ]
+      },
+      {
           "id": 4002,
           "netdata": [
                       {
@@ -26,7 +40,7 @@ var jsNetData = {
                           "provider"  : "https://rpc.testnet.fantom.network",
                           "rpc"       : "https://rpc.testnet.fantom.network",
                           "scan"      : "https://testnet.ftmscan.com",
-                          "contract"  : "0xBBc90A420bBe5E216f1c1737962b793E89A6b03e"
+                          "contract"  : "0xFa451906aeE4e6597e009377C2D01F1d737C5984"
                       }
                   ] 
       }
@@ -407,6 +421,11 @@ var jsABI = [
 			},
 			{
 				"internalType": "uint256",
+				"name": "_CIDMax",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
 				"name": "_KMax",
 				"type": "uint256"
 			},
@@ -664,6 +683,19 @@ var jsABI = [
 			}
 		],
 		"name": "balanceOf",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "CIDMax",
 		"outputs": [
 			{
 				"internalType": "uint256",
