@@ -51,6 +51,7 @@
 
     var netData
     var abi
+    var ContractScan
 
     var BASEURL = '../'
     var ChainId   = 4002 //Fantom testnet
@@ -77,9 +78,9 @@
     window.onload = function() {
 
       //Print version info
-      var nfca_version = "v."+ jsGatewayVersion +" Beta";
-      var net_version = "development testnet";
-      console.log("NFCA dev Gateway / " + net_version + " / " + nfca_version);
+      var nfca_version = "v."+ jsGatewayVersion +" Alpha";
+      var net_version = "development testnet / " + nfca_version;
+      console.log("NFCA dev Gateway / " + net_version);
       
       GetAliasFromURL()
 
@@ -114,6 +115,8 @@
         var provider = new ethers.providers.JsonRpcProvider(ChainRPC);
         var contract = new ethers.Contract(ContractAddress, abi, provider);
 
+        ContractScan = NetData[0].scan + "/address/" + NetData[0].contract
+
         contract.AliasIndex(ALIAS).then( index => {
           index = parseInt(index)
           console.log("Alias --> " + ALIAS + " - index--> " + index )
@@ -142,7 +145,7 @@
             CheckGatewayVersion(true);
 
           });
-        }).catch(error => { if(ConnError < 1){ CheckGatewayVersion(false); ConnError++; } ContentError('beta'); });
+        }).catch(error => { if(ConnError < 1){ CheckGatewayVersion(false); ConnError++; } ContentError('blockchain-error'); });
       }//Connect2Blockchain
 
 
@@ -372,18 +375,18 @@
       document.getElementById('loader-layer').style.display = 'none';
       document.getElementById('error-layer').style.display = 'block';
         document.getElementById('error-status').innerHTML = status;
-      if(status == "beta"){
+      if(status == "blockchain-error"){
         document.getElementById('error-layer').style.display = 'none';
-        document.getElementById('beta-layer').style.display = 'block';
+        document.getElementById('blockchain-layer').style.display = 'block';
       }       
       if(status == "home"){
         document.getElementById('gateway_tx').innerHTML = 'NFCA dev Gateway';
         document.getElementById('gateway_sl').innerHTML = '<b style="font-weight: 100;">Decentralized censorship resistant alias & content</b>';
         document.getElementById('gateway_get').innerHTML = 'Get a development alias';
-        if(ACCESS=="local"){  document.getElementById('gateway_ex').innerHTML = '<a class="tx-gold" href="./index.html?Alias-Tutorial">See an example'; }
-        if(ACCESS=="cserver"){ document.getElementById('gateway_ex').innerHTML = '<a class="tx-gold" href="./Alias-Tutorial">See an example'; }
-        if(ACCESS=="dserver"){ document.getElementById('gateway_ex').innerHTML = '<a class="tx-gold" href="?Alias-Tutorial">See an example'; }
       }
+      if(ACCESS=="local"){  document.getElementById('gateway_ex').innerHTML = '<a class="tx-se pointer grow" href="./index.html?dalias">DAlias</a> <br> NFCA search engine'; }
+      if(ACCESS=="cserver"){ document.getElementById('gateway_ex').innerHTML = '<a class="tx-se pointer grow" href="./dalias">DAlias</a> <br> NFCA search engine'; }
+      if(ACCESS=="dserver"){ document.getElementById('gateway_ex').innerHTML = '<a class="tx-se pointer grow" href="?dalias">DAlias</a> <br> NFCA search engine'; }       
     } 
        
     function FindNetData(_data, _network) {
@@ -407,7 +410,10 @@
       var _link= ""
       if( ACCESS == "local" ) { _link = "/index.html" }
       window.location.href = "./dev" + _link
-    }    
+    }
+    function ToScan(){
+      window.location.href = ContractScan
+    }       
     function FooterClose(){
       document.getElementById('footer').style.display = 'none';
       document.getElementById('html_content').style.marginBottom = '10px';
@@ -439,7 +445,7 @@
 
   <iframe id="obj" frameBorder="0"></iframe> 
 
-  <div id="beta-layer" style="display: none;">
+  <div id="blockchain-layer" style="display: none;">
     <div class="loader flex-container">
       <div class="flex-box">
           <div class="nfca-slash-logo"><img src="../src/icon/nfca.icon.black.rounded.svg" width="100%"></div> 
@@ -448,10 +454,10 @@
 
     <div class="loader flex-container">
       <div class="flex-box"> 
-          <h2>NFCA is still in beta test </h2>
-          <p class="pointer tx-pink"> development version is offline </p>
-          <p class="pointer grow" onclick="ToHome()"> Go to NFCA home </p>
-      </div>
+        <h2>Blockchain connection error  </h2>
+        <p class="pointer tx-pink"> NFCA smart contract disconnection </p>
+        <p class="pointer grow" onclick="ToScan()"> See in blockchain scanner </p>
+    </div>
     </div>
   </div>
  
@@ -485,9 +491,12 @@
             </svg>
 
             </div>           
-            <span class="print-alias tx-gold f-left"></span> <span class="tx-thin">&nbsp; content not found</span></h2>
-          <p id="gateway_get" class="pointer grow" onclick="ToRegister()"> Try to get this alias </p>
-          <p id="gateway_ex" class="pointer grow"></p>
+            <span class="print-alias tx-gold f-left"></span> <span class="tx-thin">&nbsp; content not found</span>
+          </h2>
+
+            <p id="gateway_get" class="pointer grow tx-gateway-get" onclick="ToRegister()" style="margin-top:30px;"> Try to get this alias </p>
+            <hr style="height:1px;border:none;color:#555;background-color:#555; width:60px; margin-top:30px;" />
+            <p id="gateway_ex" class="pointer grow"></p>
       </div>
     </div>
   </div>
@@ -571,6 +580,17 @@
     .tx-purple { color: #A463F2; }
     .tx-green { color: #19A974; }
     .tx-black { color: #000; }
+    .tx-se{
+      background: -webkit-linear-gradient(left,#4285F4, #DB4437, #F4B400, #4285F4, #0F9D58, #DB4437);
+      background: -o-linear-gradient(right, #4285F4, #DB4437, #F4B400, #4285F4, #0F9D58, #DB4437);
+      background: -moz-linear-gradient(right, #4285F4, #DB4437, #F4B400, #4285F4, #0F9D58, #DB4437);
+      background: linear-gradient(to right, #4285F4, #DB4437, #F4B400, #4285F4, #0F9D58, #DB4437);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: bold;
+      font-size: 50px;
+    }
+    .tx-gateway-get{font-weight: 700;}
 
     .bg-gold { background-color: #ffb700; }
     .bg-pink { background-color: #FF41B4; }
