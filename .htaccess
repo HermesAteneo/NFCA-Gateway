@@ -1,5 +1,5 @@
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !(nfca.icon.black.rounded.svg|nfca.icon.black.squared.svg|nfca.icon.white.squared.svg|nfca.contract.js|ethers-5.6.1.umd.min.js|awesome-qr.js)$ [NC]
-RewriteRule ^(.*)$ index.html 
+RewriteRule ^(.*)$ index.html
 
  

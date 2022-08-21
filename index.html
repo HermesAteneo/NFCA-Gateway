@@ -117,7 +117,8 @@
         contract.AliasIndex(ALIAS).then( index => {
           index = parseInt(index)
           console.log("Alias --> " + ALIAS + " -  index--> " + index )
-          if(index == 0) { ContentError('404'); return; }
+          
+          if(index == 0 && ALIAS != '0') { ContentError('404'); if(ConnError < 1){ CheckGatewayVersion(false); ConnError++; return; }  return; }
 
           //Get Alias data
           contract.RecordsA(index).then( _record => {
@@ -126,14 +127,15 @@
             KEYWORDS = _record.KeyWords
             DESCRIPTION = _record.Description
 
-            if(TYPE == 'ipfs'){ FNETWORK= 'https://ipfs.io/ipfs/'; } //CID of ipfs network
-            if(TYPE == 'sia') { FNETWORK= 'https://siasky.net/'; } //CID of sia network
+            if(TYPE == 'ipfs'){     FNETWORK= 'https://ipfs.io/ipfs/'; } //CID of ipfs network
+            if(TYPE == 'sia') {     FNETWORK= 'https://siasky.net/'; } //CID of sia network
             if(TYPE == 'arweave') { FNETWORK= 'https://arweave.net/'; } //CID of arweave network
-            if(TYPE == 'swarm') { FNETWORK= 'https://swarm-gateways.net/bzz:/'; } //CID of swarm network
-            if(TYPE == 'uri') { FNETWORK= ''; } //CID is URL           
-            if(TYPE == 'html') { FNETWORK= ''; } //CID is HTML  
-            if(TYPE == 'text') { FNETWORK= ''; } //CID is text                                 
-            if(TYPE == 'qr') { FNETWORK= ''; } //CID returned as QR Code    
+            if(TYPE == 'swarm') {   FNETWORK= 'https://swarm-gateways.net/bzz:/'; } //CID of swarm network           
+            if(TYPE == 'uri') {     FNETWORK= ''; } //CID is URL
+            if(TYPE == 'redirect') {FNETWORK= ''; } //CID is URL          
+            if(TYPE == 'html') {    FNETWORK= ''; } //CID is HTML  
+            if(TYPE == 'text') {    FNETWORK= ''; } //CID is text                                 
+            if(TYPE == 'qr') {      FNETWORK= ''; } //CID returned as QR Code    
             if(TYPE == 'plain') { var URL = 'https://nfca.cc/' + ALIAS;  document.location = URL; return; } //CID returned as plain text (only possible in nfca.cc server)
 
             LoadAliasContent();
@@ -158,14 +160,9 @@
         .then(data => { eval(data)
           if( jsGatewayVersion > this.jsGatewayVersion ){
             console.log("*\nThere is a higher gateway version "+jsGatewayVersion+"\nUpdate from https://github.com/HermesAteneo/NFCA-Gateway\n*")
-          }
-    
-          //Set data from online version to avoid outdated data
-          netData = jsNetData
-          abi = jsABI
-
-          if(!ok){ Connect2Blockchain(netData, abi) }
-
+            //Set data from online version to avoid outdated data
+            if(!ok){ Connect2Blockchain(jsNetData, jsABI) }
+          }           
         }).catch(error => { return; });
       }
 
@@ -216,7 +213,7 @@
       if( ALIAS == undefined  || ALIAS == "undefined" || ALIAS == null  || ALIAS == "null" ){ ALIAS = ""; }
 
       if( urlpathname.indexOf('/index.html') != -1 ){ ACCESS="local"; ALIAS = ""; }
-      if( window.location.pathname.indexOf('/index.html') != -1 ){ ACCESS="local";}
+      if( window.location.pathname.indexOf('/index.html') != -1 || hostname.indexOf('arweave.') != -1 ){ ACCESS="local"; }
       else if( hostname.indexOf('ipfs.') != -1 || hostname.indexOf('siasky.') != -1 || hostname.indexOf('skynet') != -1 || hostname.indexOf('fleek.') != -1 || hostname.indexOf('github.') != -1){ ACCESS="dserver"; }
       else{ ACCESS="cserver"; }
 
@@ -382,9 +379,9 @@
         document.getElementById('gateway_tx').innerHTML = 'NFCA Gateway';
         document.getElementById('gateway_sl').innerHTML = '<b style="font-weight: 100;">Decentralized censorship resistant alias & content</b>';
         document.getElementById('gateway_get').innerHTML = 'Get an alias';
-        if(ACCESS=="local"){  document.getElementById('gateway_ex').innerHTML = '<a class="tx-gold" href="./index.html?Alias-Tutorial">See an example'; }
-        if(ACCESS=="cserver"){ document.getElementById('gateway_ex').innerHTML = '<a class="tx-gold" href="./Alias-Tutorial">See an example'; }
-        if(ACCESS=="dserver"){ document.getElementById('gateway_ex').innerHTML = '<a class="tx-gold" href="?Alias-Tutorial">See an example'; }
+        if(ACCESS=="local"){  document.getElementById('gateway_ex').innerHTML = '<a class="tx-gold" href="./index.html?dalias">Alias Search Engine'; }
+        if(ACCESS=="cserver"){ document.getElementById('gateway_ex').innerHTML = '<a class="tx-gold" href="./dalias">Alias Search Engine'; }
+        if(ACCESS=="dserver"){ document.getElementById('gateway_ex').innerHTML = '<a class="tx-gold" href="?dalias">Alias Search Engine'; }
       }   
     }  
        
@@ -469,7 +466,7 @@
   <div id="error-layer" style="display: none;">
     <div class="loader flex-container">
       <div class="flex-box"> 
-          <div class="tx-right"><span class="tx-thin bg-fill bg-black rounded tx-gold b nfca-version" style="font-size: small;"></span></div>
+          <div class="tx-right"><span class="tx-thin bg-fill bg-black rounded tx-green b nfca-version" style="font-size: small;"></span></div>
           <h1 id="gateway_tx" class="bg-black bg-fill rounded nfca-anim tx-pink"><span class="">Error <span id="error-status">404</span> </span> <span class="tx-thin"> loading content of</span> </h1>
           <h2 id="gateway_sl" class="bg-black bg-fill rounded-right">
             <div class="f-left" style="padding-top:2.5px; padding-right:10px;">

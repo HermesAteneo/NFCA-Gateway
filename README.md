@@ -65,7 +65,7 @@ Any NFCA can be accessed from any NFCA gateway. Only need to know the alias that
 <a href="https://nfca.cc" target="_blank"><img src="https://nfca.cc/build/icon/nfca.icon.black.squared.svg" width="13"></a> **Development**: Free to use, deployed on Fantom testnet. ``` //nfca-gateway/dev/alias ```
 
 
-<a href="https://nfca.cc" target="_blank"><img src="https://nfca.cc/build/icon/nfca.icon.white.squared.svg" width="13"></a> **Mintable**: Free to use, deployed on Polygon mainnet. ``` //nfca-gateway/alias ```
+<a href="https://nfca.cc" target="_blank"><img src="https://nfca.cc/build/icon/nfca.icon.white.squared.svg" width="13"></a> **Mintable**: Deployed on Polygon mainnet. ``` //nfca-gateway/alias ```
 
 
 *! GAS costs of transactions on main blockchain are unavoidable* <br>
@@ -99,6 +99,10 @@ Any NFCA can be accessed from any NFCA gateway. Only need to know the alias that
 https://nfca.cc/documentation#alias_examples
 
 
+## Decentralized Alias Search Engine
+
+https://nfca.cc/se
+
 
 ## List of known gateways
 
@@ -113,6 +117,7 @@ https://nfca.cc/documentation#gateway_list
 <a href="https://nfca.cc/documentation" target="_blank"><img src="https://img.shields.io/badge/FULL-DOCUMENTATION-999?style=for-the-badge&logo=&logoColor=white&color=a463f2" ></a> &nbsp;
 <a href="https://nfca.cc" target="_blank"><img src="https://img.shields.io/badge/GET-ALIAS-999?style=for-the-badge&logo=&logoColor=white&color=ffb700" ></a> &nbsp; 
 <a href="https://nfca.cc/documentation#gateway_list" target="_blank"><img src="https://img.shields.io/badge/NFCA-GATEWAYS-999?style=for-the-badge&logo=&logoColor=white&color=FF00FF" ></a> &nbsp; 
+<a href="https://nfca.cc/se" target="_blank"><img src="https://img.shields.io/badge/DAlias-SE-999?style=for-the-badge&logo=&logoColor=white&color=34A853" ></a> &nbsp; 
 
 <br><br>
 

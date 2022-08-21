@@ -1,4 +1,4 @@
-var jsGatewayVersion = "0.2.4"
+var jsGatewayVersion = "0.2.5"
 
 var jsNetData = {
   "networks" : [
@@ -9,10 +9,10 @@ var jsNetData = {
                           "chain"     : "137",
                           "name"      : "Polygon Mainnet",
                           "symbol"    : "MATIC",
-                          "provider"  : "https://speedy-nodes-nyc.moralis.io/ccd4141adcf361f630c9ce17/polygon/mainnet",
+                          "provider"  : "https://polygon-rpc.com",
                           "rpc"       : "https://polygon-rpc.com",
                           "scan"      : "https://polygonscan.com",
-                          "contract"  : ""
+                          "contract"  : "0x9e1D3640B4e84B35A4e78608776b6623EBc50d93"
                       }
                   ]
       },
@@ -23,10 +23,10 @@ var jsNetData = {
                           "chain"     : "80001",
                           "name"      : "Polygon Testnet",
                           "symbol"    : "MATIC",
-                          "provider"  : "https://speedy-nodes-nyc.moralis.io/ccd4141adcf361f630c9ce17/polygon/mumbai",
+                          "provider"  : "https://matic-mumbai.chainstacklabs.com",
                           "rpc"       : "https://matic-mumbai.chainstacklabs.com",
                           "scan"      : "https://mumbai.polygonscan.com",
-                          "contract"  : "0x0E1B9D687c7a4772c29D1B7AB1aE93eCAf7A309A"
+                          "contract"  : "0x320907fF965F6240D28d98683f5b84b39De7122c"
                       }
                   ]
       },
@@ -40,7 +40,7 @@ var jsNetData = {
                           "provider"  : "https://rpc.testnet.fantom.network",
                           "rpc"       : "https://rpc.testnet.fantom.network",
                           "scan"      : "https://testnet.ftmscan.com",
-                          "contract"  : "0xFa451906aeE4e6597e009377C2D01F1d737C5984"
+                          "contract"  : "0x2d3e15224725e6993a5395cb80026a42a84b6e62"
                       }
                   ] 
       }
@@ -548,19 +548,6 @@ var jsABI = [
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "newOwner",
-				"type": "address"
-			}
-		],
-		"name": "transferOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"inputs": [],
 		"stateMutability": "nonpayable",
 		"type": "constructor"
@@ -834,6 +821,30 @@ var jsABI = [
 				"internalType": "string",
 				"name": "",
 				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "OwnerIndexes",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",

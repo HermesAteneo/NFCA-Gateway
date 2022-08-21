@@ -79,7 +79,7 @@
       //Print version info
       var nfca_version = "v."+ jsGatewayVersion +" Beta";
       var net_version = "development testnet";
-      console.log("NFCA Gateway / " + net_version + " / " + nfca_version);
+      console.log("NFCA dev Gateway / " + net_version + " / " + nfca_version);
       
       GetAliasFromURL()
 
@@ -91,7 +91,7 @@
 
       //Show Gateway Home
       if( ALIAS =="" ){ ContentError('home'); CheckGatewayVersion(true); return;}
-
+        
       //Inject ALIAS string dinamically
       var PrintAlias = document.getElementsByClassName('print-alias');
       for (var i = 0; i < PrintAlias.length; i++) {
@@ -116,15 +116,16 @@
 
         contract.AliasIndex(ALIAS).then( index => {
           index = parseInt(index)
-          console.log("Alias --> " + ALIAS + " -  index--> " + index )
-          if(index == 0) { ContentError('404'); return; }
+          console.log("Alias --> " + ALIAS + " - index--> " + index )
+          
+          if(index == 0) { ContentError('404'); if(ConnError < 1){ CheckGatewayVersion(false); ConnError++; return; }  return; }
 
           //Get Alias data
           contract.RecordsA(index).then( _record => {
             CID   = _record.CID
             TYPE  = _record.Type
             KEYWORDS = _record.KeyWords
-            DESCRIPTION = _record.Description
+            DESCRIPTION = _record.Description                                     
 
             if(TYPE == 'ipfs'){ FNETWORK= 'https://ipfs.io/ipfs/'; } //CID of ipfs network
             if(TYPE == 'sia') { FNETWORK= 'https://siasky.net/'; } //CID of sia network
@@ -159,14 +160,9 @@
         .then(data => { eval(data)
           if( jsGatewayVersion > this.jsGatewayVersion ){
             console.log("*\nThere is a higher gateway version "+jsGatewayVersion+"\nUpdate from https://github.com/HermesAteneo/NFCA-Gateway\n*")
-          }
-    
-          //Set data from online version to avoid outdated data
-          netData = jsNetData
-          abi = jsABI
-
-          if(!ok){ Connect2Blockchain(netData, abi) }
-
+            //Set data from online version to avoid outdated data
+            if(!ok){ Connect2Blockchain(jsNetData, jsABI) }
+          }           
         }).catch(error => { return; });
       }
 
@@ -217,7 +213,7 @@
       if( ALIAS == undefined  || ALIAS == "undefined" || ALIAS == null  || ALIAS == "null" ){ ALIAS = ""; }
 
       if( urlpathname.indexOf('/index.html') != -1 ){ ACCESS="local"; ALIAS = ""; }
-      if( window.location.pathname.indexOf('/index.html') != -1 ){ ACCESS="local";}
+      if( window.location.pathname.indexOf('/index.html') != -1 || hostname.indexOf('arweave.') != -1 ){ ACCESS="local"; }
       else if( hostname.indexOf('ipfs.') != -1 || hostname.indexOf('siasky.') != -1 || hostname.indexOf('skynet') != -1 || hostname.indexOf('fleek.') != -1 || hostname.indexOf('github.') != -1 ){ ACCESS="dserver"; }
       else{ ACCESS="cserver"; }
 
@@ -381,9 +377,9 @@
         document.getElementById('beta-layer').style.display = 'block';
       }       
       if(status == "home"){
-        document.getElementById('gateway_tx').innerHTML = 'NFCA Gateway';
+        document.getElementById('gateway_tx').innerHTML = 'NFCA dev Gateway';
         document.getElementById('gateway_sl').innerHTML = '<b style="font-weight: 100;">Decentralized censorship resistant alias & content</b>';
-        document.getElementById('gateway_get').innerHTML = 'Get an alias';
+        document.getElementById('gateway_get').innerHTML = 'Get a development alias';
         if(ACCESS=="local"){  document.getElementById('gateway_ex').innerHTML = '<a class="tx-gold" href="./index.html?Alias-Tutorial">See an example'; }
         if(ACCESS=="cserver"){ document.getElementById('gateway_ex').innerHTML = '<a class="tx-gold" href="./Alias-Tutorial">See an example'; }
         if(ACCESS=="dserver"){ document.getElementById('gateway_ex').innerHTML = '<a class="tx-gold" href="?Alias-Tutorial">See an example'; }
